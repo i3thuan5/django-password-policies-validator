@@ -14,5 +14,6 @@ deploy:
   provider: pypi
   username: "__token__"
   password: ${PYPI_TOKEN}
-  # on:
-  #   branch: main
+  on:
+    # branch: main
+    all_branches: true
