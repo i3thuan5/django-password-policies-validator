@@ -13,10 +13,11 @@ jobs:
   - stage: deploy
     name: "deploy"
     script: skip
-    provider: pypi
-    username: "__token__"
-    password: ${PYPI_TOKEN}
-    on:
-      # branch: main
-      # tags: true
-      all_branches: true
+    deploy:
+      provider: pypi
+      username: "__token__"
+      password: ${PYPI_TOKEN}
+      on:
+        # branch: main
+        # tags: true
+        all_branches: true
