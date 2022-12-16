@@ -2,9 +2,6 @@ dist: bionic
 language: python
 python:
 - '3.8'
-branches:
-  only:
-  - master
 jobs:
   include:
   - name: "flake8"
