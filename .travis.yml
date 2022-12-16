@@ -2,18 +2,19 @@ dist: bionic
 language: python
 python:
 - '3.8'
-jobs:
-  include:
-  - name: "flake8"
-    env: TOX_ENV=flake8
 install:
 - pip install tox
 script:
 - tox -e $TOX_ENV
-deploy:
-  provider: pypi
-  username: "__token__"
-  password: ${PYPI_TOKEN}
-  on:
-    # branch: main
-    all_branches: true
+jobs:
+  include:
+  - name: "flake8"
+    env: TOX_ENV=flake8
+  - stage: deploy
+    name: "deploy"
+    provider: pypi
+    username: "__token__"
+    password: ${PYPI_TOKEN}
+    on:
+      # branch: main
+      all_branches: true
