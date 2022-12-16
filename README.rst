@@ -1,6 +1,6 @@
-=====
+==================================
 django-password-policies-validator
-=====
+==================================
 
 django-password-policies-validator is a Django app to validate password complexity and prevent users from reusing previous passwords.
 
@@ -12,7 +12,7 @@ Quick start
 
     INSTALLED_APPS = [
         ...
-        'polls',
+        'password_policies',
     ]
 
 2. Add 'password_policies.password_validators.ComplexityValidator' to AUTH_PASSWORD_VALIDATORS like this::
@@ -20,10 +20,10 @@ Quick start
     AUTH_PASSWORD_VALIDATORS = [
         ...
         {
-            'NAME': 'kuanli.password_validation.ComplexityValidator',
+            'NAME': 'password_policies.password_validation.ComplexityValidator',
         },
         {
-            'NAME': 'kuanli.password_validation.RepeatedValidator',
+            'NAME': 'password_policies.password_validation.RepeatedValidator',
         },
     ]
 
