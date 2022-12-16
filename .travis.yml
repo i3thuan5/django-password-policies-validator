@@ -12,9 +12,11 @@ jobs:
     env: TOX_ENV=flake8
   - stage: deploy
     name: "deploy"
+    script: skip
     provider: pypi
     username: "__token__"
     password: ${PYPI_TOKEN}
     on:
       # branch: main
       all_branches: true
+      tags: true
