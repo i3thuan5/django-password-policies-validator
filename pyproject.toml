@@ -16,4 +16,4 @@ classifiers = [
 dynamic = ["version"]
 
 [project.urls]
-"Homepage" = "https://github.com/pypa/sampleproject"
+"Github Repository" = "https://github.com/i3thuan5/django-password-policies-validator"
