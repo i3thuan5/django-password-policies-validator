@@ -1,0 +1,15 @@
+dist: bionic
+language: python
+python:
+- '3.8'
+branches:
+  only:
+  - master
+jobs:
+  include:
+  - name: "flake8"
+    env: TOX_ENV=flake8
+install:
+- pip install tox
+script:
+- tox -e $TOX_ENV
