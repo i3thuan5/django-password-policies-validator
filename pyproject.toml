@@ -14,3 +14,6 @@ classifiers = [
     "Programming Language :: Python :: 3",
 ]
 dynamic = ["version"]
+
+[project.urls]
+"Homepage" = "https://github.com/pypa/sampleproject"
