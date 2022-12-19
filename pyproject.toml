@@ -4,16 +4,18 @@ build-backend = 'setuptools.build_meta'
 
 [project]
 name = "django-password-policies-validator"
+version = "0.0.3"
 description = "A Django app to validate password complexity and prevent users from reusing previous passwords."
 readme = "README.rst"
 requires-python = ">=3.8"
 keywords = ["django", "password", "validator"]
-license = {text = "BSD 3-Clause License"}
+license = { file="LICENSE" }
 classifiers = [
     "Framework :: Django",
     "Programming Language :: Python :: 3",
 ]
-dynamic = ["version"]
 
 [project.urls]
 "Github Repository" = "https://github.com/i3thuan5/django-password-policies-validator"
+
+[tool.setuptools_scm]
