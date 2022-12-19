@@ -10,14 +10,14 @@ class Migration(migrations.Migration):
         # if we directly import it, it'll be the wrong version
         User = apps.get_model("auth", "User")
         PasswordRecord = apps.get_model(
-            "repeated_password_validator", "PasswordRecord"
+            "password_policies", "PasswordRecord"
         )
 
         for user in User.objects.all():
             PasswordRecord.objects.create(user=user, password=user.password)
 
     dependencies = [
-        ('repeated_password_validator', '0001_initial'),
+        ('password_policies', '0001_initial'),
     ]
 
     operations = [
