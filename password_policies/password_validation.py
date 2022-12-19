@@ -26,8 +26,8 @@ class ComplexityValidator:
     def validate(self, password, user=None):
         password_valid = True
         errors = []
+        char_types_contained = 0
         for type_, regex in self.min_chars_of_each_type:
-            char_types_contained = 0
             find = re.findall(regex, password)
             required = getattr(self, type_)
             if len(find) < required:
