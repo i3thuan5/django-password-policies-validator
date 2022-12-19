@@ -1,4 +1,7 @@
 from django.core.exceptions import ValidationError
+from django.contrib.auth.hashers import check_password, make_password
+from django.utils.translation import gettext as _
+from .models import PasswordRecord
 import re
 
 
@@ -55,3 +58,40 @@ class ComplexityValidator:
             )
 
         return f"密碼應包含{'；'.join(requirements)}。"
+
+
+class RepeatedValidator:
+    # 密碼hash方式，參考 django.contrib.auth.base_user.AbstractBaseUser
+    # set_password(), check_password()
+    # Validator寫法參考：
+    # https://docs.djangoproject.com/en/4.1/topics/auth/passwords/#writing-your-own-validator
+
+    def validate(self, password, user=None):
+        # In case there is no user, this validator is not applicable.
+        if user is None:
+            return None
+
+        stored_password_records = (
+            PasswordRecord.objects.filter(user=user).order_by('-date')
+        )
+        if not stored_password_records:
+            return None
+        for record in stored_password_records[:3]:
+            if check_password(password, record.password):
+                raise ValidationError(
+                    _("密碼不可與最近3次使用過的密碼重複。"),
+                    code='password_repeated',
+                )
+
+    def password_changed(self, password, user=None):
+        # In case there is no user, this is not applicable.
+        if user is None:
+            return None
+
+        hashed_password = make_password(password)
+        PasswordRecord.objects.create(user=user, password=hashed_password)
+
+    def get_help_text(self):
+        return _(
+            "密碼不可與最近3次使用過的密碼重複。"
+        )
