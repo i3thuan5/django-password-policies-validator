@@ -3,6 +3,7 @@ from django.contrib.auth.hashers import check_password, make_password
 from django.utils.translation import gettext as _
 from .models import PasswordRecord
 import re
+from datetime import datetime, timedelta
 
 
 class ComplexityValidator:
@@ -57,7 +58,18 @@ class ComplexityValidator:
         return f"密碼應包含{'；'.join(requirements)}。"
 
 
-class RepeatedValidator:
+class CreatePasswordRecordMixin:
+
+    def password_changed(self, password, user=None):
+        # In case there is no user, this is not applicable.
+        if user is None:
+            return None
+
+        hashed_password = make_password(password)
+        PasswordRecord.objects.create(user=user, password=hashed_password)
+
+
+class RepeatedValidator(CreatePasswordRecordMixin):
     # 密碼hash方式，參考 django.contrib.auth.base_user.AbstractBaseUser
     # set_password(), check_password()
     # Validator寫法參考：
@@ -80,15 +92,34 @@ class RepeatedValidator:
                     code='password_repeated',
                 )
 
-    def password_changed(self, password, user=None):
-        # In case there is no user, this is not applicable.
-        if user is None:
-            return None
-
-        hashed_password = make_password(password)
-        PasswordRecord.objects.create(user=user, password=hashed_password)
-
     def get_help_text(self):
         return _(
             "密碼不可與最近3次使用過的密碼重複。"
+        )
+
+
+class MinimumResetIntervalValidator(CreatePasswordRecordMixin):
+
+    def __init__(self, min_interval_days=1):
+        self.min_interval = timedelta(days=min_interval_days)
+
+    def validate(self, password, user=None):
+        # In case there is no user, this validator is not applicable.
+        if user is None:
+            return None
+
+        latest_password_record = (
+            PasswordRecord.objects.filter(user=user).order_by('-date').first()
+        )
+        if not latest_password_record:
+            return None
+        if (datetime.now() - latest_password_record.date) < self.min_interval:
+            raise ValidationError(
+                _(f"距上次變更密碼須至少間隔{self.min_interval}日。"),
+                code='password_reset_interval',
+            )
+
+    def get_help_text(self):
+        return _(
+            f"距上次變更密碼須至少間隔{self.min_interval}日。"
         )
