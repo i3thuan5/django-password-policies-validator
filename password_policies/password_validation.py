@@ -72,7 +72,7 @@ class RepeatedValidator:
             return None
 
         stored_password_records = (
-            PasswordRecord.objects.filter(user=user).order_by('-date')
+            user.password_records.filter(user=user).order_by('-date')
         )
         if not stored_password_records:
             return None
