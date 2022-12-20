@@ -39,7 +39,7 @@ class ComplexityValidator:
 
         if not password_valid:
             raise ValidationError(
-                f"密碼應包含{'；'.join(errors)}。",
+                self.get_help_text(),
                 code='password_lacks_numeric_or_symbols',
             )
 
@@ -63,6 +63,9 @@ class RepeatedValidator:
     # Validator寫法參考：
     # https://docs.djangoproject.com/en/4.1/topics/auth/passwords/#writing-your-own-validator
 
+    def __init__(self, record_length=3):
+        self.record_length = record_length
+
     def validate(self, password, user=None):
         # In case there is no user, this validator is not applicable.
         if user is None:
@@ -73,10 +76,10 @@ class RepeatedValidator:
         )
         if not stored_password_records:
             return None
-        for record in stored_password_records[:3]:
+        for record in stored_password_records[:self.record_length]:
             if check_password(password, record.password):
                 raise ValidationError(
-                    _("密碼不可與最近3次使用過的密碼重複。"),
+                    self.get_help_text(),
                     code='password_repeated',
                 )
 
@@ -90,5 +93,5 @@ class RepeatedValidator:
 
     def get_help_text(self):
         return _(
-            "密碼不可與最近3次使用過的密碼重複。"
+            f"密碼不可與最近{self.record_length}次使用過的密碼重複。"
         )
