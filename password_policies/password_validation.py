@@ -3,7 +3,6 @@ from django.contrib.auth.hashers import check_password, make_password
 from django.utils.translation import gettext as _
 from django.utils import timezone
 
-from .models import PasswordRecord
 import re
 from datetime import timedelta
 
@@ -77,20 +76,23 @@ class RepeatedValidator(CreatePasswordRecordMixin):
     # Validator寫法參考：
     # https://docs.djangoproject.com/en/4.1/topics/auth/passwords/#writing-your-own-validator
 
+    def __init__(self, record_length=3):
+        self.record_length = record_length
+
     def validate(self, password, user=None):
         # In case there is no user, this validator is not applicable.
         if user is None:
             return None
 
         stored_password_records = (
-            PasswordRecord.objects.filter(user=user).order_by('-date')
+            user.password_records.order_by('-date')
         )
         if not stored_password_records:
             return None
-        for record in stored_password_records[:3]:
+        for record in stored_password_records[:self.record_length]:
             if check_password(password, record.password):
                 raise ValidationError(
-                    _("密碼不可與最近3次使用過的密碼重複。"),
+                    self.get_help_text(),
                     code='password_repeated',
                 )
 
@@ -109,7 +111,6 @@ class MinimumResetIntervalValidator(CreatePasswordRecordMixin):
         # In case there is no user, this validator is not applicable.
         if user is None:
             return None
-
         latest_password_record = (
             PasswordRecord.objects.filter(user=user).order_by('-date').first()
         )

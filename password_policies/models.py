@@ -5,6 +5,7 @@ from django.conf import settings
 class PasswordRecord(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
+        related_name='password_records',
         on_delete=models.CASCADE,
         editable=False
     )
