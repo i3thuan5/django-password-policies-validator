@@ -1,7 +1,6 @@
 from django.core.exceptions import ValidationError
 from django.contrib.auth.hashers import check_password, make_password
 from django.utils.translation import gettext as _
-from .models import PasswordRecord
 import re
 
 
@@ -39,7 +38,7 @@ class ComplexityValidator:
 
         if not password_valid:
             raise ValidationError(
-                self.get_help_text(),
+                f"密碼應包含{'；'.join(errors)}。",
                 code='password_lacks_numeric_or_symbols',
             )
 
