@@ -72,7 +72,7 @@ class RepeatedValidator:
             return None
 
         stored_password_records = (
-            user.password_records.filter(user=user).order_by('-date')
+            user.password_records.order_by('-date')
         )
         if not stored_password_records:
             return None
@@ -89,7 +89,7 @@ class RepeatedValidator:
             return None
 
         hashed_password = make_password(password)
-        PasswordRecord.objects.create(user=user, password=hashed_password)
+        user.password_records.create(password=hashed_password)
 
     def get_help_text(self):
         return _(
