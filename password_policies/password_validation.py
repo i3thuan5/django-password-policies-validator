@@ -59,18 +59,7 @@ class ComplexityValidator:
         return f"密碼應包含{'；'.join(requirements)}。"
 
 
-class CreatePasswordRecordMixin:
-
-    def password_changed(self, password, user=None):
-        # In case there is no user, this is not applicable.
-        if user is None:
-            return None
-
-        hashed_password = make_password(password)
-        user.password_records.create(password=hashed_password)
-
-
-class RepeatedValidator(CreatePasswordRecordMixin):
+class RepeatedValidator:
     # 密碼hash方式，參考 django.contrib.auth.base_user.AbstractBaseUser
     # set_password(), check_password()
     # Validator寫法參考：
@@ -102,7 +91,7 @@ class RepeatedValidator(CreatePasswordRecordMixin):
         )
 
 
-class MinimumResetIntervalValidator(CreatePasswordRecordMixin):
+class MinimumResetIntervalValidator:
 
     def __init__(self, min_interval_days=1):
         self.min_interval = timedelta(days=min_interval_days)
