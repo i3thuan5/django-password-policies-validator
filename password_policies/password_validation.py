@@ -67,7 +67,7 @@ class CreatePasswordRecordMixin:
             return None
 
         hashed_password = make_password(password)
-        PasswordRecord.objects.create(user=user, password=hashed_password)
+        user.password_records.create(password=hashed_password)
 
 
 class RepeatedValidator(CreatePasswordRecordMixin):
@@ -98,7 +98,7 @@ class RepeatedValidator(CreatePasswordRecordMixin):
 
     def get_help_text(self):
         return _(
-            "密碼不可與最近3次使用過的密碼重複。"
+            f"密碼不可與最近{self.record_length}次使用過的密碼重複。"
         )
 
 
@@ -112,7 +112,7 @@ class MinimumResetIntervalValidator(CreatePasswordRecordMixin):
         if user is None:
             return None
         latest_password_record = (
-            PasswordRecord.objects.filter(user=user).order_by('-date').first()
+            user.objects.order_by('-date').first()
         )
         if not latest_password_record:
             return None
