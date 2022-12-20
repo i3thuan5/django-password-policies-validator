@@ -1,8 +1,7 @@
 from django.core.exceptions import ValidationError
+from django.contrib.auth.hashers import check_password, make_password
+from django.utils.translation import gettext as _
 import re
-
-
-SYMBOLS = re.compile(r'[()[\]{}|\\`~!@#$%^&*_\-+=;:\'",<>./?]')
 
 
 class ComplexityValidator:
@@ -12,7 +11,7 @@ class ComplexityValidator:
             ('min_numeric_chars', r'[0-9]'),
             ('min_uppercase_chars', r'[A-Z]'),
             ('min_lowercase_chars', r'[a-z]'),
-            ('min_symbol_chars', SYMBOLS),
+            ('min_symbol_chars', r'[^0-9A-Za-z]'),
         ]
         for attr, _regex in self.min_chars_of_each_type:
             setattr(
@@ -23,8 +22,8 @@ class ComplexityValidator:
     def validate(self, password, user=None):
         password_valid = True
         errors = []
+        char_types_contained = 0
         for type_, regex in self.min_chars_of_each_type:
-            char_types_contained = 0
             find = re.findall(regex, password)
             required = getattr(self, type_)
             if len(find) < required:
@@ -55,3 +54,43 @@ class ComplexityValidator:
             )
 
         return f"密碼應包含{'；'.join(requirements)}。"
+
+
+class RepeatedValidator:
+    # 密碼hash方式，參考 django.contrib.auth.base_user.AbstractBaseUser
+    # set_password(), check_password()
+    # Validator寫法參考：
+    # https://docs.djangoproject.com/en/4.1/topics/auth/passwords/#writing-your-own-validator
+
+    def __init__(self, record_length=3):
+        self.record_length = record_length
+
+    def validate(self, password, user=None):
+        # In case there is no user, this validator is not applicable.
+        if user is None:
+            return None
+
+        stored_password_records = (
+            user.password_records.order_by('-date')
+        )
+        if not stored_password_records:
+            return None
+        for record in stored_password_records[:self.record_length]:
+            if check_password(password, record.password):
+                raise ValidationError(
+                    self.get_help_text(),
+                    code='password_repeated',
+                )
+
+    def password_changed(self, password, user=None):
+        # In case there is no user, this is not applicable.
+        if user is None:
+            return None
+
+        hashed_password = make_password(password)
+        user.password_records.create(password=hashed_password)
+
+    def get_help_text(self):
+        return _(
+            f"密碼不可與最近{self.record_length}次使用過的密碼重複。"
+        )
