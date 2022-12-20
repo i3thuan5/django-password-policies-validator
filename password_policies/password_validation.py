@@ -1,9 +1,11 @@
 from django.core.exceptions import ValidationError
 from django.contrib.auth.hashers import check_password, make_password
 from django.utils.translation import gettext as _
+from django.utils import timezone
+
 from .models import PasswordRecord
 import re
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 
 class ComplexityValidator:
@@ -113,13 +115,14 @@ class MinimumResetIntervalValidator(CreatePasswordRecordMixin):
         )
         if not latest_password_record:
             return None
-        if (datetime.now() - latest_password_record.date) < self.min_interval:
+        if (timezone.now() - latest_password_record.date) \
+                < self.min_interval:
             raise ValidationError(
-                _(f"距上次變更密碼須至少間隔{self.min_interval}日。"),
+                _(f"距上次變更密碼須至少間隔{self.min_interval.days}日。"),
                 code='password_reset_interval',
             )
 
     def get_help_text(self):
         return _(
-            f"距上次變更密碼須至少間隔{self.min_interval}日。"
+            f"距上次變更密碼須至少間隔{self.min_interval.days}日。"
         )
