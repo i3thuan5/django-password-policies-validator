@@ -19,3 +19,6 @@ classifiers = [
 "Github Repository" = "https://github.com/i3thuan5/django-password-policies-validator"
 
 [tool.setuptools_scm]
+
+[tool.setuptools]
+package-dir = {"password_policies" = "password_policies"}

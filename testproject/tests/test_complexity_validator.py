@@ -1,3 +1,5 @@
+from unittest import TestCase
+from django.contrib.auth.models import User
 
 
 class ComplexityValidatorTest(TestCase):
