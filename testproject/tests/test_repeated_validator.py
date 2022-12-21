@@ -17,6 +17,7 @@ class RepeatedValidatorTest(TestCase):
             'password1': 'tomay123',
             'password2': 'tomay123',
         })
+        user_form.full_clean()
         hana = user_form.save()
         password_form = SetPasswordForm(user=hana, data={
             'new_password1': 'pawli456',
@@ -35,20 +36,24 @@ class RepeatedValidatorTest(TestCase):
             'password1': 'tomay123',
             'password2': 'tomay123',
         })
+        user_form.full_clean()
         hana = user_form.save()
-        SetPasswordForm(user=hana, data={
+        form2 = SetPasswordForm(user=hana, data={
             'new_password1': 'pawli456',
             'new_password2': 'pawli456',
-        }).save()
-        SetPasswordForm(user=hana, data={
+        })
+        form2.full_clean()
+        form2.save()
+        form3 = SetPasswordForm(user=hana, data={
             'new_password1': 'mali111',
             'new_password2': 'mali111',
-        }).save()
+        })
+        form3.full_clean()
+        form3.save()
         password_form = SetPasswordForm(user=hana, data={
             'new_password1': 'tomay123',
             'new_password2': 'tomay123',
         })
-        password_form.save()
         self.assertFalse(password_form.is_valid())
 
     def test_第5kái密碼會使khiāmkah第1kái_kāngkhuán_不可以與前三次使用過之密碼相同(self):
@@ -57,24 +62,30 @@ class RepeatedValidatorTest(TestCase):
             'password1': 'tomay123',
             'password2': 'tomay123',
         })
+        user_form.full_clean()
         hana = user_form.save()
-        SetPasswordForm(user=hana, data={
+        form2 = SetPasswordForm(user=hana, data={
             'new_password1': 'pawli456',
             'new_password2': 'pawli456',
-        }).save()
-        SetPasswordForm(user=hana, data={
+        })
+        form2.full_clean()
+        form2.save()
+        form3 = SetPasswordForm(user=hana, data={
             'new_password1': 'mali111',
             'new_password2': 'mali111',
-        }).save()
-        SetPasswordForm(user=hana, data={
+        })
+        form3.full_clean()
+        form3.save()
+        form4 = SetPasswordForm(user=hana, data={
             'new_password1': '222posi',
             'new_password2': '222posi',
-        }).save()
+        })
+        form4.full_clean()
+        form4.save()
         password_form = SetPasswordForm(user=hana, data={
             'new_password1': 'tomay123',
             'new_password2': 'tomay123',
         })
-        password_form.save()
         self.assertTrue(password_form.is_valid())
 
     def test_options設做2_第3kái密碼會使khiāmkah第1kái_kāngkhuán(self):
