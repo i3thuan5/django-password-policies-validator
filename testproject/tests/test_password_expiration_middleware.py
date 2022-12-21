@@ -90,6 +90,9 @@ class PasswordExpirationMiddleware(TestCase):
             self.assertEqual(response.status_code, 302)
             self.assertEqual(response.url, reverse('admin:password_change'))
 
+    def test_新使用者過90工攏無改密碼_重設密碼有作用(self):
+        self.fail()
+
     @override_settings(MIDDLEWARE=settings.MIDDLEWARE + [
         'password_policies.middleware.PasswordExpirationMiddleware',
     ])
