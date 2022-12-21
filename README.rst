@@ -25,6 +25,9 @@ Quick start
         {
             'NAME': 'password_policies.password_validation.RepeatedValidator',
         },
+        {
+            'NAME': 'password_policies.password_validation.MinimumResetIntervalValidator',
+        },
     ]
 
 3. Run ``python manage.py migrate`` to create the ``PasswordRecord`` models.
