@@ -6,14 +6,26 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import UserCreationForm
 
 class ComplexityValidatorTest(TestCase):
-	def test_lowercase_number_至少4種字元(self):
-		hana = User.objects.create_user('Hana')
-		userForm = UserCreationForm({
-			'username': 'Hana',
-			'password1': 'tomay123',
-			'password2': 'tomay123',
-		})
-		userForm.full_clean()
-		self.assertTrue(
-			userForm.has_error('password1') or userForm.has_error('password2')
-		)
+    def test_lowercase_number_2種字元(self):
+        hana = User.objects.create_user('Hana')
+        userForm = UserCreationForm({
+            'username': 'Hana',
+            'password1': 'tomay123',
+            'password2': 'tomay123',
+        })
+        userForm.full_clean()
+        self.assertTrue(
+            userForm.has_error('password1') or userForm.has_error('password2')
+        )
+
+    def test_4種字元(self):
+        hana = User.objects.create_user('Hana')
+        userForm = UserCreationForm({
+            'username': 'Hana',
+            'password1': 'toMay!23',
+            'password2': 'toMay!23',
+        })
+        userForm.full_clean()
+        self.assertFalse(
+            userForm.has_error('password1') or userForm.has_error('password2')
+        )
