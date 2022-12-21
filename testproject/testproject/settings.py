@@ -98,15 +98,6 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
-    {
-        'NAME': 'password_policies.password_validation.ComplexityValidator',
-    },
-    {
-        'NAME': 'password_policies.password_validation.RepeatedValidator',
-    },
-    {
-        'NAME': 'password_policies.password_validation.MinimumResetIntervalValidator',
-    },
 ]
 
 

@@ -68,6 +68,8 @@ class RepeatedValidator:
     # https://docs.djangoproject.com/en/4.1/topics/auth/passwords/#writing-your-own-validator
 
     def __init__(self, record_length=3):
+        if record_length <= 0:
+            raise ValueError('record_length must be larger than 0.')
         self.record_length = record_length
 
     def validate(self, password, user=None):
