@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'password_policies',
 ]
 
 MIDDLEWARE = [
@@ -96,6 +97,12 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
+    {
+        'NAME': 'password_policies.password_validation.ComplexityValidator',
+    },
+    {
+        'NAME': 'password_policies.password_validation.RepeatedValidator',
     },
 ]
 
