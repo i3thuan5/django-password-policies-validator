@@ -4,6 +4,13 @@ from django.contrib.auth.forms import UserCreationForm
 
 
 class ComplexityValidatorTest(TestCase):
+
+    @override_settings(AUTH_PASSWORD_VALIDATORS=[
+        {
+            'NAME':
+            'password_policies.password_validation.ComplexityValidator',
+        }
+    ])
     def test_lowercase_number_2種字元(self):
         user_form = UserCreationForm({
             'username': 'Hana',
@@ -12,6 +19,12 @@ class ComplexityValidatorTest(TestCase):
         })
         self.assertFalse(user_form.is_valid())
 
+    @override_settings(AUTH_PASSWORD_VALIDATORS=[
+        {
+            'NAME':
+            'password_policies.password_validation.ComplexityValidator',
+        }
+    ])
     def test_4種字元(self):
         user_form = UserCreationForm({
             'username': 'Hana',
