@@ -104,6 +104,9 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'password_policies.password_validation.RepeatedValidator',
     },
+    {
+        'NAME': 'password_policies.password_validation.MinimumResetIntervalValidator',
+    },
 ]
 
 

@@ -1,10 +1,12 @@
+import re
+from datetime import timedelta
+
 from django.core.exceptions import ValidationError
 from django.contrib.auth.hashers import check_password
 from django.utils.translation import gettext as _
 from django.utils import timezone
 
-import re
-from datetime import timedelta
+from .models import PasswordRecord
 
 
 class ComplexityValidator:
@@ -74,7 +76,7 @@ class RepeatedValidator:
             return None
 
         stored_password_records = (
-            user.password_records.order_by('-date')
+            PasswordRecord.objects.filter(user=user).order_by('-date')
         )
         if not stored_password_records:
             return None
@@ -101,7 +103,7 @@ class MinimumResetIntervalValidator:
         if user is None:
             return None
         latest_password_record = (
-            user.objects.order_by('-date').first()
+            PasswordRecord.objects.filter(user=user).order_by('-date').first()
         )
         if not latest_password_record:
             return None
