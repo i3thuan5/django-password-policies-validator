@@ -1,5 +1,5 @@
 from django.core.exceptions import ValidationError
-from django.contrib.auth.hashers import check_password, make_password
+from django.contrib.auth.hashers import check_password
 from django.utils.translation import gettext as _
 from django.utils import timezone
 
