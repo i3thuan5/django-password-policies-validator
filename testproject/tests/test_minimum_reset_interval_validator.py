@@ -10,8 +10,7 @@ from django.contrib.auth.forms import SetPasswordForm
 class MinimumResetIntervalValidatorTest(TestCase):
     @override_settings(AUTH_PASSWORD_VALIDATORS=[
         {
-            'NAME':
-            'password_policies.password_validation.MinimumResetIntervalValidator',
+            'NAME': 'password_policies.password_validation.MinimumResetIntervalValidator',  # noqa
         }
     ])
     def test_改了隨改密碼_會擋起來(self):
@@ -30,8 +29,7 @@ class MinimumResetIntervalValidatorTest(TestCase):
 
     @override_settings(AUTH_PASSWORD_VALIDATORS=[
         {
-            'NAME':
-            'password_policies.password_validation.MinimumResetIntervalValidator',
+            'NAME': 'password_policies.password_validation.MinimumResetIntervalValidator',  # noqa
         }
     ])
     def test_過1工後_ētàng改(self):
@@ -58,9 +56,8 @@ class MinimumResetIntervalValidatorTest(TestCase):
 
     @override_settings(AUTH_PASSWORD_VALIDATORS=[
         {
-            'NAME':
-            'password_policies.password_validation.MinimumResetIntervalValidator',
-            'OPTIONS':{
+            'NAME': 'password_policies.password_validation.MinimumResetIntervalValidator',  # noqa
+            'OPTIONS': {
                 'min_interval_days': 2.0,
             }
         }
