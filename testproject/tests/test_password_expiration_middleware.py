@@ -4,6 +4,10 @@ from datetime import timezone
 from datetime import timedelta
 from django.test import TestCase
 from django.test import override_settings
+from django.conf import settings
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import SetPasswordForm
+from django.urls import reverse
 
 
 class PasswordExpirationMiddleware(TestCase):
@@ -18,6 +22,9 @@ class PasswordExpirationMiddleware(TestCase):
         })
         user_form.full_clean()
         hana = user_form.save()
+        hana.is_active = True
+        hana.is_staff = True
+        hana.save()
         self.client.post(reverse('admin:login'),{
             'username': 'Hana',
             'password': 'tomay123',
@@ -40,6 +47,9 @@ class PasswordExpirationMiddleware(TestCase):
             })
             user_form.full_clean()
             hana = user_form.save()
+            hana.is_active = True
+            hana.is_staff = True
+            hana.save()
         with patch(
             'django.utils.timezone.now',
             return_value=datetime(2022, 12, 21, tzinfo=timezone.utc)+timedelta(days=90)
@@ -62,6 +72,9 @@ class PasswordExpirationMiddleware(TestCase):
             })
             user_form.full_clean()
             hana = user_form.save()
+            hana.is_active = True
+            hana.is_staff = True
+            hana.save()
         with patch(
             'django.utils.timezone.now',
             return_value=datetime(2022, 12, 21, tzinfo=timezone.utc)+timedelta(days=90)
@@ -89,6 +102,9 @@ class PasswordExpirationMiddleware(TestCase):
             })
             user_form.full_clean()
             hana = user_form.save()
+            hana.is_active = True
+            hana.is_staff = True
+            hana.save()
         with patch(
             'django.utils.timezone.now',
             return_value=datetime(2022, 12, 21, tzinfo=timezone.utc)+timedelta(days=30)
@@ -109,6 +125,7 @@ class PasswordExpirationMiddleware(TestCase):
             })
             response = self.client.get(reverse('admin:index'))
             self.assertEqual(response.status_code, 200)
+
     @override_settings(MIDDLEWARE=settings.MIDDLEWARE + [
         'password_policies.middleware.PasswordExpirationMiddleware',
     ], PASSWORD_EXPIRATION_DAYS=180.0)
@@ -124,6 +141,9 @@ class PasswordExpirationMiddleware(TestCase):
             })
             user_form.full_clean()
             hana = user_form.save()
+            hana.is_active = True
+            hana.is_staff = True
+            hana.save()
         with patch(
             'django.utils.timezone.now',
             return_value=datetime(2022, 12, 21, tzinfo=timezone.utc)+timedelta(days=90)
