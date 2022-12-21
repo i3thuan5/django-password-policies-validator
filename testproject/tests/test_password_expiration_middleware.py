@@ -85,7 +85,7 @@ class PasswordExpirationMiddleware(TestCase):
             })
             response = self.client.get(reverse('admin:index'))
             self.assertEqual(response.status_code, 302)
-            self.assertEqual(response.url, reverse('admin:setpassword'))
+            self.assertEqual(response.url, reverse('admin:password_change'))
 
     @override_settings(MIDDLEWARE=settings.MIDDLEWARE + [
         'password_policies.middleware.PasswordExpirationMiddleware',

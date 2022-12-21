@@ -19,7 +19,7 @@ class PasswordExpirationMiddleware:
         if request.user.is_authenticated:
             latest_password_record = request.user.password_records.latest('date')
             if (timezone.now() - latest_password_record.date) \
-                > self.expiration_days:
+                >= self.expiration_days:
                 return redirect('admin:password_change')
 
         response = self.get_response(request)
