@@ -4,5 +4,5 @@ from django.contrib.auth import get_user_model
 
 
 @receiver(post_save, sender=get_user_model())
-def my_callback(sender, instance, **kwargs):
+def create_password_record(sender, instance, **kwargs):
     instance.password_records.create(password=instance.password)
