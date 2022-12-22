@@ -24,9 +24,10 @@ class PasswordExpirationMiddleware:
                 latest_record = request.user.password_records.latest('date')
                 if (timezone.now() - latest_record.date) \
                         >= self.expiration_days:
-                    return redirect(
-                        reverse("admin:password_change", current_app=resolve_match.namespace)
-                    )
+                    return redirect(reverse(
+                        "admin:password_change",
+                        current_app=resolve_match.namespace
+                    ))
 
         response = self.get_response(request)
 
