@@ -112,7 +112,7 @@ class PasswordExpirationMiddleware(TestCase):
             response4 = self.client.get(response3.url)  # password_change
             self.assertEqual(len(response4.context['messages']), 1, response4.context['messages'])
 
-    def test_新使用者過90工攏無改密碼_重設密碼網頁重整理嘛有提示(self):
+    def test_過90工攏無改_重設網頁重整理嘛有提示(self):
         with patch(
             'django.utils.timezone.now',
             return_value=self.user_creation_date
