@@ -110,7 +110,10 @@ class PasswordExpirationMiddleware(TestCase):
             })
             response3 = self.client.get(response2.url)  # index
             response4 = self.client.get(response3.url)  # password_change
-            self.assertEqual(len(response4.context['messages']), 1, response4.context['messages'])
+            self.assertEqual(
+                len(response4.context['messages']), 1,
+                response4.context['messages']
+            )
 
     def test_過90工攏無改_重設網頁重整理嘛有提示(self):
         with patch(
@@ -137,9 +140,9 @@ class PasswordExpirationMiddleware(TestCase):
                 'password': 'tomay123',
             })
             response3 = self.client.get(response2.url)  # index
-            response4 = self.client.get(response3.url)  # password_change
+            self.client.get(response3.url)  # password_change
             response5 = self.client.get(response3.url)  # password_change again
-            self.assertEqual(len(response5.context['messages']), 1, response5.context['messages'])
+            self.assertEqual(len(response5.context['messages']), 1)
 
     def test_新使用者過90工攏無改密碼_重設密碼有作用(self):
         with patch(
