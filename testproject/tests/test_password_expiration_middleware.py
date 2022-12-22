@@ -15,6 +15,8 @@ from django.urls import reverse
     'password_policies.middleware.PasswordExpirationMiddleware',
 ])
 class PasswordExpirationMiddleware(TestCase):
+    user_creation_date = datetime(2022, 12, 21, tzinfo=timezone.utc)
+
     def test_新使用者login正常(self):
         user_form = UserCreationForm({
             'username': 'Hana',
@@ -26,7 +28,7 @@ class PasswordExpirationMiddleware(TestCase):
         hana.is_active = True
         hana.is_staff = True
         hana.save()
-        self.client.post(reverse('admin:login'),{
+        self.client.post(reverse('admin:login'), {
             'username': 'Hana',
             'password': 'tomay123',
         })
@@ -36,7 +38,7 @@ class PasswordExpirationMiddleware(TestCase):
     def test_新使用者過90工攏無改密碼_tī登入頁正常顯示(self):
         with patch(
             'django.utils.timezone.now',
-            return_value=datetime(2022, 12, 21, tzinfo=timezone.utc)
+            return_value=self.user_creation_date
         ):
             user_form = UserCreationForm({
                 'username': 'Hana',
@@ -50,7 +52,7 @@ class PasswordExpirationMiddleware(TestCase):
             hana.save()
         with patch(
             'django.utils.timezone.now',
-            return_value=datetime(2022, 12, 21, tzinfo=timezone.utc)+timedelta(days=90)
+            return_value=self.user_creation_date + timedelta(days=90)
         ):
             response = self.client.get(reverse('admin:login'))
             self.assertEqual(response.status_code, 200)
@@ -58,7 +60,7 @@ class PasswordExpirationMiddleware(TestCase):
     def test_新使用者過90工攏無改密碼_會到重設密碼ê網頁(self):
         with patch(
             'django.utils.timezone.now',
-            return_value=datetime(2022, 12, 21, tzinfo=timezone.utc)
+            return_value=self.user_creation_date
         ):
             user_form = UserCreationForm({
                 'username': 'Hana',
@@ -72,9 +74,9 @@ class PasswordExpirationMiddleware(TestCase):
             hana.save()
         with patch(
             'django.utils.timezone.now',
-            return_value=datetime(2022, 12, 21, tzinfo=timezone.utc)+timedelta(days=90)
+            return_value=self.user_creation_date + timedelta(days=90)
         ):
-            self.client.post(reverse('admin:login'),{
+            self.client.post(reverse('admin:login'), {
                 'username': 'Hana',
                 'password': 'tomay123',
             })
@@ -85,7 +87,7 @@ class PasswordExpirationMiddleware(TestCase):
     def test_新使用者過90工攏無改密碼_重設密碼有作用(self):
         with patch(
             'django.utils.timezone.now',
-            return_value=datetime(2022, 12, 21, tzinfo=timezone.utc)
+            return_value=self.user_creation_date
         ):
             user_form = UserCreationForm({
                 'username': 'Hana',
@@ -99,28 +101,32 @@ class PasswordExpirationMiddleware(TestCase):
             hana.save()
         with patch(
             'django.utils.timezone.now',
-            return_value=datetime(2022, 12, 21, tzinfo=timezone.utc)+timedelta(days=90)
+            return_value=self.user_creation_date + timedelta(days=90)
         ):
-            self.client.post(reverse('admin:login'),{
+            self.client.post(reverse('admin:login'), {
                 'username': 'Hana',
                 'password': 'tomay123',
             })
             response1 = self.client.get(reverse('admin:password_change'))
             self.assertEqual(response1.status_code, 200)
-            response2 = self.client.post(reverse('admin:password_change'),{
+            response2 = self.client.post(reverse('admin:password_change'), {
                     'old_password': 'tomay123',
                     'new_password1': ':posi:333',
                     'new_password2': ':posi:333',
             })
-            self.assertEqual(response2.status_code, 302, response2.content.decode())
-            self.assertEqual(response2.url, reverse('admin:password_change_done'))
+            self.assertEqual(
+                response2.status_code, 302, response2.content.decode()
+            )
+            self.assertEqual(
+                response2.url, reverse('admin:password_change_done')
+            )
             response3 = self.client.get(reverse('admin:index'))
             self.assertEqual(response3.status_code, 200, response3)
 
     def test_使用者改過密碼_tī90工內正常登入(self):
         with patch(
             'django.utils.timezone.now',
-            return_value=datetime(2022, 12, 21, tzinfo=timezone.utc)
+            return_value=self.user_creation_date
         ):
             user_form = UserCreationForm({
                 'username': 'Hana',
@@ -134,7 +140,7 @@ class PasswordExpirationMiddleware(TestCase):
             hana.save()
         with patch(
             'django.utils.timezone.now',
-            return_value=datetime(2022, 12, 21, tzinfo=timezone.utc)+timedelta(days=30)
+            return_value=self.user_creation_date + timedelta(days=30)
         ):
             password_form = SetPasswordForm(user=hana, data={
                 'new_password1': 'pawli456',
@@ -144,9 +150,9 @@ class PasswordExpirationMiddleware(TestCase):
             password_form.save()
         with patch(
             'django.utils.timezone.now',
-            return_value=datetime(2022, 12, 21, tzinfo=timezone.utc)+timedelta(days=90)
+            return_value=self.user_creation_date + timedelta(days=90)
         ):
-            self.client.post(reverse('admin:login'),{
+            self.client.post(reverse('admin:login'), {
                 'username': 'Hana',
                 'password': 'pawli456',
             })
@@ -159,7 +165,7 @@ class PasswordExpirationMiddleware(TestCase):
     def test_options設做180_tī90工正常登入(self):
         with patch(
             'django.utils.timezone.now',
-            return_value=datetime(2022, 12, 21, tzinfo=timezone.utc)
+            return_value=self.user_creation_date
         ):
             user_form = UserCreationForm({
                 'username': 'Hana',
@@ -173,9 +179,9 @@ class PasswordExpirationMiddleware(TestCase):
             hana.save()
         with patch(
             'django.utils.timezone.now',
-            return_value=datetime(2022, 12, 21, tzinfo=timezone.utc)+timedelta(days=90)
+            return_value=self.user_creation_date + timedelta(days=90)
         ):
-            self.client.post(reverse('admin:login'),{
+            self.client.post(reverse('admin:login'), {
                 'username': 'Hana',
                 'password': 'tomay123',
             })
@@ -185,7 +191,7 @@ class PasswordExpirationMiddleware(TestCase):
     def test_admin是別ê名(self):
         with patch(
             'django.utils.timezone.now',
-            return_value=datetime(2022, 12, 21, tzinfo=timezone.utc)
+            return_value=self.user_creation_date
         ):
             user_form = UserCreationForm({
                 'username': 'Hana',
@@ -199,9 +205,9 @@ class PasswordExpirationMiddleware(TestCase):
             hana.save()
         with patch(
             'django.utils.timezone.now',
-            return_value=datetime(2022, 12, 21, tzinfo=timezone.utc)+timedelta(days=90)
+            return_value=self.user_creation_date + timedelta(days=90)
         ):
-            self.client.post(reverse('autai:login'),{
+            self.client.post(reverse('autai:login'), {
                 'username': 'Hana',
                 'password': 'tomay123',
             })
@@ -212,7 +218,7 @@ class PasswordExpirationMiddleware(TestCase):
     def test_admin以外ê網頁_正常顯示(self):
         with patch(
             'django.utils.timezone.now',
-            return_value=datetime(2022, 12, 21, tzinfo=timezone.utc)
+            return_value=self.user_creation_date
         ):
             user_form = UserCreationForm({
                 'username': 'Hana',
@@ -226,14 +232,14 @@ class PasswordExpirationMiddleware(TestCase):
             hana.save()
         with patch(
             'django.utils.timezone.now',
-            return_value=datetime(2022, 12, 21, tzinfo=timezone.utc)+timedelta(days=90)
+            return_value=self.user_creation_date + timedelta(days=90)
         ):
-            ## 後台有登入
-            self.client.post(reverse('admin:login'),{
+            # 後台有登入
+            self.client.post(reverse('admin:login'), {
                 'username': 'Hana',
                 'password': 'tomay123',
             })
-            ## 前台看網站
+            # 前台看網站
             response = self.client.get(reverse('custom_index'))
             self.assertEqual(response.status_code, 200)
 

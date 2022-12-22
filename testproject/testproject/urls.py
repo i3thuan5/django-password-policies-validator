@@ -22,6 +22,7 @@ from django.http import HttpResponse
 def custom_index(request):
     return HttpResponse('Misalama kita!')
 
+
 autai_site = AdminSite(name='autai')
 
 urlpatterns = [

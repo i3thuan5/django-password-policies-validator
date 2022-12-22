@@ -7,7 +7,8 @@ from django.core.exceptions import ObjectDoesNotExist
 @receiver(post_save, sender=get_user_model())
 def create_password_record(sender, instance, **kwargs):
     try:
-        if instance.password_records.latest('date').password == instance.password:
+        latest_record = instance.password_records.latest('date')
+        if latest_record.password == instance.password:
             return
     except ObjectDoesNotExist:
         pass
