@@ -1,5 +1,6 @@
 from datetime import timedelta
 from django.conf import settings
+from django.contrib import messages
 from django.shortcuts import redirect
 from django.utils import timezone
 from django.urls import resolve
@@ -24,6 +25,11 @@ class PasswordExpirationMiddleware:
                 latest_record = request.user.password_records.latest('date')
                 if (timezone.now() - latest_record.date) \
                         >= self.expiration_days:
+                    messages.warning(
+                        request,
+                        '已經超過{}工無修改密碼，請修改後才繼續操作'.format(self.expiration_days),
+                         fail_silently=True,
+                    )
                     return redirect(reverse(
                         "admin:password_change",
                         current_app=resolve_match.namespace
