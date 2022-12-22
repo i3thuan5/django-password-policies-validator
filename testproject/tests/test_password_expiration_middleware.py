@@ -8,9 +8,6 @@ from django.conf import settings
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import SetPasswordForm
 from django.urls import reverse
-from django.contrib import admin
-from django.contrib.admin import AdminSite
-from django.urls import path
 
 
 class PasswordExpirationMiddleware(TestCase):
@@ -163,7 +160,7 @@ class PasswordExpirationMiddleware(TestCase):
 
     @override_settings(MIDDLEWARE=settings.MIDDLEWARE + [
         'password_policies.middleware.PasswordExpirationMiddleware',
-    ], ROOT_URLCONF='tests.test_password_expiration_middleware')
+    ])
     def test_admin是別ê名(self):
         with patch(
             'django.utils.timezone.now',
@@ -191,9 +188,40 @@ class PasswordExpirationMiddleware(TestCase):
             self.assertEqual(response.status_code, 302)
             self.assertEqual(response.url, reverse('autai:password_change'))
 
+    @override_settings(MIDDLEWARE=settings.MIDDLEWARE + [
+        'password_policies.middleware.PasswordExpirationMiddleware',
+    ])
+    def test_admin以外ê網頁_正常顯示(self):
+        with patch(
+            'django.utils.timezone.now',
+            return_value=datetime(2022, 12, 21, tzinfo=timezone.utc)
+        ):
+            user_form = UserCreationForm({
+                'username': 'Hana',
+                'password1': 'tomay123',
+                'password2': 'tomay123',
+            })
+            user_form.full_clean()
+            hana = user_form.save()
+            hana.is_active = True
+            hana.is_staff = True
+            hana.save()
+        with patch(
+            'django.utils.timezone.now',
+            return_value=datetime(2022, 12, 21, tzinfo=timezone.utc)+timedelta(days=90)
+        ):
+            ## 後台有登入
+            self.client.post(reverse('admin:login'),{
+                'username': 'Hana',
+                'password': 'tomay123',
+            })
+            ## 前台看網站
+            response = self.client.get(reverse('custom_index'))
+            self.assertEqual(response.status_code, 200)
 
-autai_site=AdminSite(name='autai')
-urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('autai/', autai_site.urls),
-]
+    @skip('以後有需求才定義')
+    @override_settings(MIDDLEWARE=settings.MIDDLEWARE + [
+        'password_policies.middleware.PasswordExpirationMiddleware',
+    ], PASSWORD_CHANGE_REDIRECT_TO='custom_password_change')
+    def test_tīadmin外口_ài跳去指定êview(self):
+        self.fail()

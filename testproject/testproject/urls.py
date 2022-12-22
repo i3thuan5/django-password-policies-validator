@@ -14,8 +14,18 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.contrib.admin import AdminSite
 from django.urls import path
+from django.http import HttpResponse
+
+
+def custom_password_change(request):
+    return HttpResponse('OK')
+
+autai_site = AdminSite(name='autai')
 
 urlpatterns = [
+    path('custom_password_change/', custom_password_change, name='custom_password_change')
     path('admin/', admin.site.urls),
+    path('autai/', autai_site.urls),
 ]
