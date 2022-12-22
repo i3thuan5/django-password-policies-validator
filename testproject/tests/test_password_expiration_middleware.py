@@ -11,10 +11,10 @@ from django.contrib.auth.forms import SetPasswordForm
 from django.urls import reverse
 
 
+@override_settings(MIDDLEWARE=settings.MIDDLEWARE + [
+    'password_policies.middleware.PasswordExpirationMiddleware',
+])
 class PasswordExpirationMiddleware(TestCase):
-    @override_settings(MIDDLEWARE=settings.MIDDLEWARE + [
-        'password_policies.middleware.PasswordExpirationMiddleware',
-    ])
     def test_新使用者login正常(self):
         user_form = UserCreationForm({
             'username': 'Hana',
@@ -33,9 +33,6 @@ class PasswordExpirationMiddleware(TestCase):
         response = self.client.get(reverse('admin:index'))
         self.assertEqual(response.status_code, 200)
 
-    @override_settings(MIDDLEWARE=settings.MIDDLEWARE + [
-        'password_policies.middleware.PasswordExpirationMiddleware',
-    ])
     def test_新使用者過90工攏無改密碼_tī登入頁正常顯示(self):
         with patch(
             'django.utils.timezone.now',
@@ -58,9 +55,6 @@ class PasswordExpirationMiddleware(TestCase):
             response = self.client.get(reverse('admin:login'))
             self.assertEqual(response.status_code, 200)
 
-    @override_settings(MIDDLEWARE=settings.MIDDLEWARE + [
-        'password_policies.middleware.PasswordExpirationMiddleware',
-    ])
     def test_新使用者過90工攏無改密碼_會到重設密碼ê網頁(self):
         with patch(
             'django.utils.timezone.now',
@@ -115,10 +109,10 @@ class PasswordExpirationMiddleware(TestCase):
             self.assertEqual(response1.status_code, 200)
             response2 = self.client.post(reverse('admin:password_change'),{
                     'old_password': 'tomay123',
-                    'new_password1': 'posi333',
-                    'new_password2': 'posi333',
+                    'new_password1': ':posi:333',
+                    'new_password2': ':posi:333',
             })
-            self.assertEqual(response2.status_code, 301)
+            self.assertEqual(response2.status_code, 302, response2.content.decode())
             self.assertEqual(response2.url, reverse('admin:password_change_done'))
             response3 = self.client.get(reverse('admin:index'))
             self.assertEqual(response3.status_code, 200)
@@ -191,9 +185,6 @@ class PasswordExpirationMiddleware(TestCase):
             response = self.client.get(reverse('admin:index'))
             self.assertEqual(response.status_code, 200)
 
-    @override_settings(MIDDLEWARE=settings.MIDDLEWARE + [
-        'password_policies.middleware.PasswordExpirationMiddleware',
-    ])
     def test_admin是別ê名(self):
         with patch(
             'django.utils.timezone.now',
@@ -221,9 +212,6 @@ class PasswordExpirationMiddleware(TestCase):
             self.assertEqual(response.status_code, 302)
             self.assertEqual(response.url, reverse('autai:password_change'))
 
-    @override_settings(MIDDLEWARE=settings.MIDDLEWARE + [
-        'password_policies.middleware.PasswordExpirationMiddleware',
-    ])
     def test_admin以外ê網頁_正常顯示(self):
         with patch(
             'django.utils.timezone.now',
