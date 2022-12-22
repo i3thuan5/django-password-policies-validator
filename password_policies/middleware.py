@@ -19,10 +19,11 @@ class PasswordExpirationMiddleware:
 
         resolve_match = resolve(request.path)
         if resolve_match.app_name == 'admin' and request.user.is_authenticated:
-            latest_password_record = request.user.password_records.latest('date')
-            if (timezone.now() - latest_password_record.date) \
-                >= self.expiration_days:
-                return redirect('{}:password_change'.format(resolve_match.namespace))
+            if resolve_match.url_name != 'password_change':
+                latest_password_record = request.user.password_records.latest('date')
+                if (timezone.now() - latest_password_record.date) \
+                    >= self.expiration_days:
+                    return redirect('{}:password_change'.format(resolve_match.namespace))
 
         response = self.get_response(request)
 

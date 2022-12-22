@@ -115,11 +115,8 @@ class PasswordExpirationMiddleware(TestCase):
             self.assertEqual(response2.status_code, 302, response2.content.decode())
             self.assertEqual(response2.url, reverse('admin:password_change_done'))
             response3 = self.client.get(reverse('admin:index'))
-            self.assertEqual(response3.status_code, 200)
+            self.assertEqual(response3.status_code, 200, response3)
 
-    @override_settings(MIDDLEWARE=settings.MIDDLEWARE + [
-        'password_policies.middleware.PasswordExpirationMiddleware',
-    ])
     def test_使用者改過密碼_tī90工內正常登入(self):
         with patch(
             'django.utils.timezone.now',
