@@ -19,13 +19,13 @@ from django.urls import path
 from django.http import HttpResponse
 
 
-def custom_password_change(request):
-    return HttpResponse('OK')
+def custom_index(request):
+    return HttpResponse('Misalama kita!')
 
 autai_site = AdminSite(name='autai')
 
 urlpatterns = [
-    path('custom_password_change/', custom_password_change, name='custom_password_change')
+    path('index/', custom_index, name='custom_index'),
     path('admin/', admin.site.urls),
     path('autai/', autai_site.urls),
 ]

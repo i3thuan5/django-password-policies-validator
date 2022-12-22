@@ -16,11 +16,26 @@ class PasswordExpirationMiddleware:
         # Code to be executed for each request before
         # the view (and later middleware) are called.
 
+        from django.urls import resolve
+        from django.urls import reverse
+        resolve_match = resolve(request.path)
+        print(
+            'resolve_match',
+            resolve_match.url_name,
+            resolve_match.view_name,
+
+            )
+        print('app_name',resolve_match.app_name,'namespace',resolve_match.namespace)
+        print(
+            "request.path.startswith(reverse('admin:index'))",
+            request.path.startswith(reverse('admin:index'))
+            )
         if request.user.is_authenticated:
-            latest_password_record = request.user.password_records.latest('date')
-            if (timezone.now() - latest_password_record.date) \
-                >= self.expiration_days:
-                return redirect('admin:password_change')
+            if resolve_match.app_name == 'admin':
+                latest_password_record = request.user.password_records.latest('date')
+                if (timezone.now() - latest_password_record.date) \
+                    >= self.expiration_days:
+                    return redirect('{}:password_change'.format(resolve_match.namespace))
 
         response = self.get_response(request)
 
