@@ -105,7 +105,7 @@ class MinimumResetIntervalValidator:
         if user is None:
             return None
         latest_password_record = (
-            PasswordRecord.objects.filter(user=user).order_by('-date').first()
+            PasswordRecord.objects.filter(user=user).latest()
         )
         if not latest_password_record:
             return None
