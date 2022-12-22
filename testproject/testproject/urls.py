@@ -14,8 +14,19 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.contrib.admin import AdminSite
 from django.urls import path
+from django.http import HttpResponse
+
+
+def custom_index(request):
+    return HttpResponse('Misalama kita!')
+
+
+autai_site = AdminSite(name='autai')
 
 urlpatterns = [
+    path('index/', custom_index, name='custom_index'),
     path('admin/', admin.site.urls),
+    path('autai/', autai_site.urls),
 ]

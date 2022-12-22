@@ -142,3 +142,32 @@ class RepeatedValidatorTest(TestCase):
             'password2': 'tomay123',
         })
         self.assertRaises(ValueError, user_form.full_clean)
+
+    @override_settings(AUTH_PASSWORD_VALIDATORS=[
+        {
+            'NAME': 'password_policies.password_validation.RepeatedValidator',
+        }
+    ])
+    def test_改username嘛無影響(self):
+        user_form = UserCreationForm({
+            'username': 'Hana',
+            'password1': 'tomay123',
+            'password2': 'tomay123',
+        })
+        user_form.full_clean()
+        hana = user_form.save()
+        form2 = SetPasswordForm(user=hana, data={
+            'new_password1': 'pawli456',
+            'new_password2': 'pawli456',
+        })
+        form2.full_clean()
+        form2.save()
+        hana.username = 'Pawli'
+        hana.save()
+        hana.username = 'Mali'
+        hana.save()
+        password_form = SetPasswordForm(user=hana, data={
+            'new_password1': 'tomay123',
+            'new_password2': 'tomay123',
+        })
+        self.assertFalse(password_form.is_valid())

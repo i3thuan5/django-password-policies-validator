@@ -12,6 +12,8 @@ jobs:
     env: TOX_ENV=flake8
   - name: "checkmigrations"
     env: TOX_ENV=checkmigrations
+  - name: "test"
+    env: TOX_ENV=test
   - stage: deploy
     name: "deploy"
     install: skip
