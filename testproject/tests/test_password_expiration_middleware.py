@@ -89,7 +89,39 @@ class PasswordExpirationMiddleware(TestCase):
             self.assertEqual(response.url, reverse('admin:password_change'))
 
     def test_新使用者過90工攏無改密碼_重設密碼有作用(self):
-        self.fail()
+        with patch(
+            'django.utils.timezone.now',
+            return_value=datetime(2022, 12, 21, tzinfo=timezone.utc)
+        ):
+            user_form = UserCreationForm({
+                'username': 'Hana',
+                'password1': 'tomay123',
+                'password2': 'tomay123',
+            })
+            user_form.full_clean()
+            hana = user_form.save()
+            hana.is_active = True
+            hana.is_staff = True
+            hana.save()
+        with patch(
+            'django.utils.timezone.now',
+            return_value=datetime(2022, 12, 21, tzinfo=timezone.utc)+timedelta(days=90)
+        ):
+            self.client.post(reverse('admin:login'),{
+                'username': 'Hana',
+                'password': 'tomay123',
+            })
+            response1 = self.client.get(reverse('admin:password_change'))
+            self.assertEqual(response1.status_code, 200)
+            response2 = self.client.post(reverse('admin:password_change'),{
+                    'old_password': 'tomay123',
+                    'new_password1': 'posi333',
+                    'new_password2': 'posi333',
+            })
+            self.assertEqual(response2.status_code, 301)
+            self.assertEqual(response2.url, reverse('admin:password_change_done'))
+            response3 = self.client.get(reverse('admin:index'))
+            self.assertEqual(response3.status_code, 200)
 
     @override_settings(MIDDLEWARE=settings.MIDDLEWARE + [
         'password_policies.middleware.PasswordExpirationMiddleware',
