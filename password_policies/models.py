@@ -21,3 +21,7 @@ class PasswordRecord(models.Model):
         auto_now_add=True,
         editable=False
     )
+
+    class Meta:
+        get_latest_by = 'date'
+        ordering = ['-date']
