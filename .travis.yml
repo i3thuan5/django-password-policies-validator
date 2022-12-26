@@ -23,5 +23,4 @@ jobs:
       username: "__token__"
       password: ${PYPI_TOKEN}
       on:
-        # branch: main
-        all_branches: true
+        branch: main
