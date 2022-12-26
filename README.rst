@@ -61,7 +61,6 @@ Custom options can be passed into validators by the following syntax ::
 Available options of each validator and their default values are listed below.
 
 ``ComplexityValidator(min_char_types=4, min_numeric_chars=1, min_uppercase_chars=1, min_lowercase_chars=1, min_symbol_chars=1)``
-
     Validates that the password is complex enough by checking how many categories of characters it contains, or the count of certain category of characters. Characters are devided into four categories:
 
     - Uppercase Latin alphabet characters A-Z
@@ -85,14 +84,12 @@ Available options of each validator and their default values are listed below.
         The minimum count of special characters that the password should contain. Value should be any positive integer.
 
 ``RepeatedValidator(record_length=3)``
-
     Remembers the user's previous *n* passwords and validate the new password doed not repeat any of them.
 
     ``record_length``
         The number of previous password records that the validator should compare against. Value should be any positive integer.
 
 ``MinimumResetIntervalValidator(min_interval=1)``
-
     Prevent the user from changing the password again within certain period of time. This is to avoid the user to bypass ``RepeatedValidator`` and reuse the old password by changing passwords repeatedly in a short period of time. 
 
     ``min_interval``
@@ -102,7 +99,6 @@ The ``PasswordExpirationMiddleware`` class
 ------------------------------------------
 
 ``PasswordExpirationMiddleware``
-
     Checks the user's password-changing records, if the user's password is expired, redirect the user to the password-changing form and shows a warning message.
 
     This middleware works for any urls under the ``admin`` application namespace and redirects to the ``password_change`` url under the same namespace of the page which the user is redirected from. Urls not under the ``admin`` application namespace are not redirected.
