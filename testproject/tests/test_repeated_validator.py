@@ -4,11 +4,11 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import SetPasswordForm
 
 
-class RepeatedValidatorTest(TestCase):
+class ReusedPasswordpeatedValidatorTest(TestCase):
 
     @override_settings(AUTH_PASSWORD_VALIDATORS=[
         {
-            'NAME': 'password_policies.password_validation.RepeatedValidator',
+            'NAME': 'password_policies.password_validation.ReusedPasswordValidator',  # noqa
         }
     ])
     def test_bôkāngkhuán密碼會使khiām(self):
@@ -27,7 +27,7 @@ class RepeatedValidatorTest(TestCase):
 
     @override_settings(AUTH_PASSWORD_VALIDATORS=[
         {
-            'NAME': 'password_policies.password_validation.RepeatedValidator',
+            'NAME': 'password_policies.password_validation.ReusedPasswordValidator',  # noqa
         }
     ])
     def test_第4kái袂使kah第1káikāngkhuán_不可以與前三次使用過之密碼相同(self):
@@ -58,7 +58,7 @@ class RepeatedValidatorTest(TestCase):
 
     @override_settings(AUTH_PASSWORD_VALIDATORS=[
         {
-            'NAME': 'password_policies.password_validation.RepeatedValidator',
+            'NAME': 'password_policies.password_validation.ReusedPasswordValidator',  # noqa
         }
     ])
     def test_第5kái密碼會使khiāmkah第1kái_kāngkhuán_不可以與前三次使用過之密碼相同(self):
@@ -95,7 +95,7 @@ class RepeatedValidatorTest(TestCase):
 
     @override_settings(AUTH_PASSWORD_VALIDATORS=[
         {
-            'NAME': 'password_policies.password_validation.RepeatedValidator',
+            'NAME': 'password_policies.password_validation.ReusedPasswordValidator',  # noqa
             'OPTIONS': {
                 'record_length': 2,
             }
@@ -129,7 +129,7 @@ class RepeatedValidatorTest(TestCase):
 
     @override_settings(AUTH_PASSWORD_VALIDATORS=[
         {
-            'NAME': 'password_policies.password_validation.RepeatedValidator',
+            'NAME': 'password_policies.password_validation.ReusedPasswordValidator',  # noqa
             'OPTIONS': {
                 'record_length': 0,
             }
@@ -145,7 +145,7 @@ class RepeatedValidatorTest(TestCase):
 
     @override_settings(AUTH_PASSWORD_VALIDATORS=[
         {
-            'NAME': 'password_policies.password_validation.RepeatedValidator',
+            'NAME': 'password_policies.password_validation.ReusedPasswordValidator',  # noqa
         }
     ])
     def test_改username嘛無影響(self):
