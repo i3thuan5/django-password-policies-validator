@@ -59,14 +59,14 @@ Custom options can be passed into validators by the following syntax ::
 
 Available options of each validator and their default values are listed below.
 
-.. class:: ComplexityValidator(min_char_types=4, min_numeric_chars=1, min_uppercase_chars=1, min_lowercase_chars=1, min_symbol_chars=1)
+.. function:: ComplexityValidator(min_char_types=4, min_numeric_chars=1, min_uppercase_chars=1, min_lowercase_chars=1, min_symbol_chars=1)
 
     Validates that the password is complex enough by checking how many categories of characters it contains, or the count of certain category of characters. Characters are devided into four categories:
 
-        - Uppercase Latin alphabet characters A-Z
-        - Lowercase Latin alphabet characters a-z
-        - Digits 0-9
-        - Non-alphanumeric (special) characters
+    - Uppercase Latin alphabet characters A-Z
+    - Lowercase Latin alphabet characters a-z
+    - Digits 0-9
+    - Non-alphanumeric (special) characters
 
     ``min_char_types``
         The minimum categories of characters that the password should contain out of the four categories above. Value should be between 1 and 4 and default to 4.
@@ -85,7 +85,7 @@ Available options of each validator and their default values are listed below.
 
 
 
-.. class:: RepeatedValidator(record_length=3)
+.. function:: RepeatedValidator(record_length=3)
 
     Remembers the user's previous *n* passwords and validate the new password doed not repeat any of them.
 
@@ -93,7 +93,7 @@ Available options of each validator and their default values are listed below.
         The number of previous password records that the validator should compare against. Value should be any positive integer.
 
 
-.. class:: MinimumResetIntervalValidator(min_interval=1)
+.. function:: MinimumResetIntervalValidator(min_interval=1)
 
     Prevent the user from changing the password again within certain period of time. This is to avoid the user to bypass ``RepeatedValidator`` and reuse the old password by changing passwords repeatedly in a short period of time. 
 
@@ -104,7 +104,7 @@ Available options of each validator and their default values are listed below.
 The ``PasswordExpirationMiddleware`` class
 ------------------------------------------
 
-.. class:: PasswordExpirationMiddleware
+.. function:: PasswordExpirationMiddleware
 
     Checks the user's password-changing records, if the user's password is expired, redirect the user to the password-changing form and shows a warning message.
 
