@@ -84,6 +84,66 @@ class PasswordExpirationMiddleware(TestCase):
             self.assertEqual(response.status_code, 302)
             self.assertEqual(response.url, reverse('admin:password_change'))
 
+    def test_新使用者過90工攏無改密碼_重設密碼網頁有提示(self):
+        with patch(
+            'django.utils.timezone.now',
+            return_value=self.user_creation_date
+        ):
+            user_form = UserCreationForm({
+                'username': 'Hana',
+                'password1': 'tomay123',
+                'password2': 'tomay123',
+            })
+            user_form.full_clean()
+            hana = user_form.save()
+            hana.is_active = True
+            hana.is_staff = True
+            hana.save()
+        with patch(
+            'django.utils.timezone.now',
+            return_value=self.user_creation_date + timedelta(days=90)
+        ):
+            response1 = self.client.get(reverse('admin:index'))
+            response2 = self.client.post(response1.url, {  # login
+                'username': 'Hana',
+                'password': 'tomay123',
+            })
+            response3 = self.client.get(response2.url)  # index
+            response4 = self.client.get(response3.url)  # password_change
+            self.assertEqual(
+                len(response4.context['messages']), 1,
+                response4.context['messages']
+            )
+
+    def test_過90工攏無改_重設網頁重整理嘛有提示(self):
+        with patch(
+            'django.utils.timezone.now',
+            return_value=self.user_creation_date
+        ):
+            user_form = UserCreationForm({
+                'username': 'Hana',
+                'password1': 'tomay123',
+                'password2': 'tomay123',
+            })
+            user_form.full_clean()
+            hana = user_form.save()
+            hana.is_active = True
+            hana.is_staff = True
+            hana.save()
+        with patch(
+            'django.utils.timezone.now',
+            return_value=self.user_creation_date + timedelta(days=90)
+        ):
+            response1 = self.client.get(reverse('admin:index'))
+            response2 = self.client.post(response1.url, {  # login
+                'username': 'Hana',
+                'password': 'tomay123',
+            })
+            response3 = self.client.get(response2.url)  # index
+            self.client.get(response3.url)  # password_change
+            response5 = self.client.get(response3.url)  # password_change again
+            self.assertEqual(len(response5.context['messages']), 1)
+
     def test_新使用者過90工攏無改密碼_重設密碼有作用(self):
         with patch(
             'django.utils.timezone.now',
