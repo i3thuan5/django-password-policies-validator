@@ -31,6 +31,7 @@ Quick start
     ]
 
 #. Append ``PasswordExpirationMiddleware`` to MIDDLEWARE setting, note that this must be listed **after** the ``'django.contrib.auth.middleware.AuthenticationMiddleware'`` ::
+
     MIDDLEWARE = [
         ...
         'password_policies.middleware.PasswordExpirationMiddleware',
@@ -83,8 +84,6 @@ Available options of each validator and their default values are listed below.
     ``min_symbol_chars``
         The minimum count of special characters that the password should contain. Value should be any positive integer.
 
-
-
 .. function:: RepeatedValidator(record_length=3)
 
     Remembers the user's previous *n* passwords and validate the new password doed not repeat any of them.
@@ -92,14 +91,12 @@ Available options of each validator and their default values are listed below.
     ``record_length``
         The number of previous password records that the validator should compare against. Value should be any positive integer.
 
-
 .. function:: MinimumResetIntervalValidator(min_interval=1)
 
     Prevent the user from changing the password again within certain period of time. This is to avoid the user to bypass ``RepeatedValidator`` and reuse the old password by changing passwords repeatedly in a short period of time. 
 
     ``min_interval``
         The minimum time interval (in days) of two consecutive password change attempts. Value should be any positive interger or float.
-
 
 The ``PasswordExpirationMiddleware`` class
 ------------------------------------------
