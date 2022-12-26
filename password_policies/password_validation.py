@@ -11,12 +11,12 @@ from .models import PasswordRecord
 
 class ComplexityValidator:
     def __init__(self, **kwargs):
-        self.min_char_types = kwargs.pop('min_char_types', 4)
+        self.min_char_categories = kwargs.pop('min_char_categories', 4)
         self.min_chars_of_each_type = [
             ('min_numeric_chars', r'[0-9]'),
             ('min_uppercase_chars', r'[A-Z]'),
             ('min_lowercase_chars', r'[a-z]'),
-            ('min_symbol_chars', r'[^0-9A-Za-z]'),
+            ('min_special_chars', r'[^0-9A-Za-z]'),
         ]
         for attr, _regex in self.min_chars_of_each_type:
             setattr(
@@ -37,9 +37,9 @@ class ComplexityValidator:
             if find:
                 char_types_contained += 1
 
-        if char_types_contained < self.min_char_types:
+        if char_types_contained < self.min_char_categories:
             password_valid = False
-            errors.append(f"大寫、小寫、數字、特殊符號中至少{self.min_char_types}種字元")
+            errors.append(f"大寫、小寫、數字、特殊符號中至少{self.min_char_categories}種字元")
 
         if not password_valid:
             raise ValidationError(
@@ -53,15 +53,15 @@ class ComplexityValidator:
             required = getattr(self, type_)
             if required:
                 requirements.append(f"至少{required}個{type_}字元")
-        if self.min_char_types:
+        if self.min_char_categories:
             requirements.append(
-                f"大寫、小寫、數字、特殊符號中至少{self.min_char_types}種字元"
+                f"大寫、小寫、數字、特殊符號中至少{self.min_char_categories}種字元"
             )
 
         return f"密碼應包含{'；'.join(requirements)}。"
 
 
-class RepeatedValidator:
+class ReusedPasswordValidator:
     # 密碼hash方式，參考 django.contrib.auth.base_user.AbstractBaseUser
     # set_password(), check_password()
     # Validator寫法參考：
@@ -95,7 +95,7 @@ class RepeatedValidator:
         )
 
 
-class MinimumResetIntervalValidator:
+class MinimumChangeIntervalValidator:
 
     def __init__(self, min_interval_days=1):
         self.min_interval = timedelta(days=min_interval_days)

@@ -23,10 +23,10 @@ Quick start
             'NAME': 'password_policies.password_validation.ComplexityValidator',
         },
         {
-            'NAME': 'password_policies.password_validation.RepeatedValidator',
+            'NAME': 'password_policies.password_validation.ReusedPasswordValidator',
         },
         {
-            'NAME': 'password_policies.password_validation.MinimumResetIntervalValidator',
+            'NAME': 'password_policies.password_validation.MinimumChangeIntervalValidator',
         },
     ]
 
@@ -52,7 +52,7 @@ Custom options can be passed into validators by the following syntax ::
         {
             'NAME': 'password_policies.password_validation.ComplexityValidator',
             'OPTIONS': {
-                'min_char_types': 3,
+                'min_char_categories': 3,
                 'min_numeric_chars': 2,
             }
         },
@@ -60,15 +60,15 @@ Custom options can be passed into validators by the following syntax ::
 
 Available options of each validator and their default values are listed below.
 
-``ComplexityValidator(min_char_types=4, min_numeric_chars=1, min_uppercase_chars=1, min_lowercase_chars=1, min_symbol_chars=1)``
+``ComplexityValidator(min_char_categories=4, min_numeric_chars=1, min_uppercase_chars=1, min_lowercase_chars=1, min_special_chars=1)``
     Validates that the password is complex enough by checking how many categories of characters it contains, or the count of certain category of characters. Characters are devided into four categories:
 
-    - Uppercase Latin alphabet characters A-Z
-    - Lowercase Latin alphabet characters a-z
-    - Digits 0-9
+    - Uppercase alphabet characters A-Z
+    - Lowercase alphabet characters a-z
+    - Numeric characters 0-9
     - Non-alphanumeric (special) characters
 
-    ``min_char_types``
+    ``min_char_categories``
         The minimum categories of characters that the password should contain out of the four categories above. Value should be between 1 and 4.
 
     ``min_numeric_chars``
@@ -80,17 +80,17 @@ Available options of each validator and their default values are listed below.
     ``min_lowercase_chars``
         The minimum count of lowercase characters that the password should contain. Value should be 0 or any positive integer.
 
-    ``min_symbol_chars``
+    ``min_special_chars``
         The minimum count of special characters that the password should contain. Value should be 0 or any positive integer.
 
-``RepeatedValidator(record_length=3)``
+``ReusedPasswordValidator(record_length=3)``
     Remembers the user's previous *n* passwords and validate the new password doed not repeat any of them.
 
     ``record_length``
         The number of previous password records that the validator should compare against. Value should be any positive integer.
 
-``MinimumResetIntervalValidator(min_interval=1)``
-    Prevent the user from changing the password again within certain period of time. This is to avoid the user to bypass ``RepeatedValidator`` and reuse the old password by changing passwords repeatedly in a short period of time. 
+``MinimumChangeIntervalValidator(min_interval=1)``
+    Prevent the user from changing the password again within certain period of time. This is to avoid the user to bypass ``ReusedPasswordValidator`` and reuse the old password by changing passwords repeatedly in a short period of time. 
 
     ``min_interval``
         The minimum time interval (in days) of two consecutive password change attempts. Value should be any positive interger or float.

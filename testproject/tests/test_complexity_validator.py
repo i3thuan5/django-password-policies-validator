@@ -38,11 +38,11 @@ class ComplexityValidatorTest(TestCase):
             'NAME':
             'password_policies.password_validation.ComplexityValidator',
             'OPTIONS': {
-                'min_char_types': 2,
+                'min_char_categories': 2,
                 'min_numeric_chars': 2,
                 'min_uppercase_chars': 0,
                 'min_lowercase_chars': 2,
-                'min_symbol_chars': 0,
+                'min_special_chars': 0,
             },
         }
     ])
@@ -59,11 +59,11 @@ class ComplexityValidatorTest(TestCase):
             'NAME':
             'password_policies.password_validation.ComplexityValidator',
             'OPTIONS': {
-                'min_char_types': 2,
+                'min_char_categories': 2,
                 'min_numeric_chars': 5,
                 'min_uppercase_chars': 0,
                 'min_lowercase_chars': 2,
-                'min_symbol_chars': 0,
+                'min_special_chars': 0,
             },
         }
     ])
