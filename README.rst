@@ -69,19 +69,19 @@ Available options of each validator and their default values are listed below.
     - Non-alphanumeric (special) characters
 
     ``min_char_types``
-        The minimum categories of characters that the password should contain out of the four categories above. Value should be between 1 and 4 and default to 4.
+        The minimum categories of characters that the password should contain out of the four categories above. Value should be between 1 and 4.
 
     ``min_numeric_chars``
-        The minimum count of numeric characters that the password should contain. Value should be any positive integer.
+        The minimum count of numeric characters that the password should contain. Value should be 0 or any positive integer.
 
     ``min_uppercase_chars``
-        The minimum count of uppercase characters that the password should contain. Value should be any positive integer.
+        The minimum count of uppercase characters that the password should contain. Value should be 0 or any positive integer.
 
     ``min_lowercase_chars``
-        The minimum count of lowercase characters that the password should contain. Value should be any positive integer.
+        The minimum count of lowercase characters that the password should contain. Value should be 0 or any positive integer.
 
     ``min_symbol_chars``
-        The minimum count of special characters that the password should contain. Value should be any positive integer.
+        The minimum count of special characters that the password should contain. Value should be 0 or any positive integer.
 
 ``RepeatedValidator(record_length=3)``
     Remembers the user's previous *n* passwords and validate the new password doed not repeat any of them.
