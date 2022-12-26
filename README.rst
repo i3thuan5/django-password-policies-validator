@@ -30,7 +30,6 @@ Quick start
         },
     ]
 
-    
 #. Append ``PasswordExpirationMiddleware`` to MIDDLEWARE setting, note that this must be listed **after** the ``'django.contrib.auth.middleware.AuthenticationMiddleware'`` ::
     MIDDLEWARE = [
         ...
