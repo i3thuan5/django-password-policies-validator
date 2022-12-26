@@ -78,7 +78,7 @@ class RepeatedValidator:
             return None
 
         stored_password_records = (
-            PasswordRecord.objects.filter(user=user).order_by('-date')
+            PasswordRecord.objects.filter(user=user)
         )
         if not stored_password_records:
             return None
@@ -104,10 +104,11 @@ class MinimumResetIntervalValidator:
         # In case there is no user, this validator is not applicable.
         if user is None:
             return None
-        latest_password_record = (
-            PasswordRecord.objects.filter(user=user).order_by('-date').first()
-        )
-        if not latest_password_record:
+        try:
+            latest_password_record = (
+                PasswordRecord.objects.filter(user=user).latest()
+            )
+        except PasswordRecord.DoesNotExist:
             return None
         if (timezone.now() - latest_password_record.date) \
                 < self.min_interval:
