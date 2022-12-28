@@ -13,12 +13,12 @@ class ComplexityValidator:
     def __init__(self, **kwargs):
         self.min_char_categories = kwargs.pop('min_char_categories', 4)
         self.min_chars_of_each_type = [
-            ('min_numeric_chars', r'[0-9]'),
-            ('min_uppercase_chars', r'[A-Z]'),
-            ('min_lowercase_chars', r'[a-z]'),
-            ('min_special_chars', r'[^0-9A-Za-z]'),
+            ('min_numeric_chars', r'[0-9]', '數字'),
+            ('min_uppercase_chars', r'[A-Z]', '大寫字母'),
+            ('min_lowercase_chars', r'[a-z]', '小寫字母'),
+            ('min_special_chars', r'[^0-9A-Za-z]', '特殊符號'),
         ]
-        for attr, _regex in self.min_chars_of_each_type:
+        for attr, _regex, _name in self.min_chars_of_each_type:
             setattr(
                 self, attr,
                 kwargs.get(attr, 1)
@@ -28,12 +28,12 @@ class ComplexityValidator:
         password_valid = True
         errors = []
         char_types_contained = 0
-        for type_, regex in self.min_chars_of_each_type:
+        for attr, regex, name in self.min_chars_of_each_type:
             find = re.findall(regex, password)
-            required = getattr(self, type_)
+            required = getattr(self, attr)
             if len(find) < required:
                 password_valid = False
-                errors.append(f"至少{required}個{type_}字元")
+                errors.append(f"至少{required}個{name}字元")
             if find:
                 char_types_contained += 1
 
@@ -49,10 +49,10 @@ class ComplexityValidator:
 
     def get_help_text(self):
         requirements = []
-        for type_, regex in self.min_chars_of_each_type:
-            required = getattr(self, type_)
+        for attr, regex, name in self.min_chars_of_each_type:
+            required = getattr(self, attr)
             if required:
-                requirements.append(f"至少{required}個{type_}字元")
+                requirements.append(f"至少{required}個{name}字元")
         if self.min_char_categories:
             requirements.append(
                 f"大寫、小寫、數字、特殊符號中至少{self.min_char_categories}種字元"
