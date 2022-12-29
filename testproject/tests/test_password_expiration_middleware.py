@@ -180,8 +180,12 @@ class PasswordExpirationMiddleware(TestCase):
             self.assertEqual(
                 response2.url, reverse('admin:password_change_done')
             )
-            response3 = self.client.get(reverse('admin:index'))
-            self.assertEqual(response3.status_code, 200, response3)
+            response3 = self.client.get(response2.url)
+            self.assertEqual(
+                len(response3.context['messages']), 0
+            )
+            response4 = self.client.get(reverse('admin:index'))
+            self.assertEqual(response4.status_code, 200, response4)
 
     def test_使用者改過密碼_tī90工內正常登入(self):
         with patch(
