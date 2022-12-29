@@ -29,13 +29,14 @@ class PasswordExpirationMiddleware:
                         "admin:password_change",
                         current_app=resolve_match.namespace
                     ))
-                messages.warning(
-                    request,
-                    '已經超過{}工無修改密碼，請修改後才繼續操作'.format(
-                        self.expiration_days.days
-                    ),
-                    fail_silently=True,
-                )
+                if request.method == 'GET':
+                    messages.warning(
+                        request,
+                        '已經超過{}工無修改密碼，請修改後才繼續操作'.format(
+                            self.expiration_days.days
+                        ),
+                        fail_silently=True,
+                    )
 
         response = self.get_response(request)
 
