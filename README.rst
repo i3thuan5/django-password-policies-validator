@@ -34,6 +34,8 @@ Quick start
 
     MIDDLEWARE = [
         ...
+        'django.contrib.auth.middleware.AuthenticationMiddleware',
+        ...
         'password_policies.middleware.PasswordExpirationMiddleware',
     ]
 
