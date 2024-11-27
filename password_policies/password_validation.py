@@ -78,7 +78,7 @@ class ReusedPasswordValidator:
             return None
 
         stored_password_records = (
-            PasswordRecord.objects.filter(user=user)
+            PasswordRecord.objects.filter(user=user.id)
         )
         if not stored_password_records:
             return None
@@ -106,7 +106,7 @@ class MinimumChangeIntervalValidator:
             return None
         try:
             latest_password_record = (
-                PasswordRecord.objects.filter(user=user).latest()
+                PasswordRecord.objects.filter(user=user.id).latest()
             )
         except PasswordRecord.DoesNotExist:
             return None
