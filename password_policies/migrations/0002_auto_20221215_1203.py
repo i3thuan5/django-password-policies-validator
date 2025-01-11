@@ -8,7 +8,7 @@ class Migration(migrations.Migration):
     def create_password_record(apps, schema_editor):
         # We get the model from the versioned app registry;
         # if we directly import it, it'll be the wrong version
-        User = apps.get_model("auth", "User")
+        User = apps.get_model(settings.AUTH_USER_MODEL)
         PasswordRecord = apps.get_model(
             "password_policies", "PasswordRecord"
         )
