@@ -1,36 +1,37 @@
+---
 branches:
   only:
-  - main
-  - "/\\d+\\.\\d+\\.\\d+/"
+    - main
+    - "/\\d+\\.\\d+\\.\\d+/"
 os: linux
 dist: jammy
 language: python
 python:
-- '3.10'
+  - '3.10'
 install:
-- pip install tox
+  - pip install tox
 script:
-- tox -e $TOX_ENV
+  - tox -e $TOX_ENV
 jobs:
   include:
-  - name: Check YAML format
-    install:
-      - pip install tox
-    script:
-      - tox -e yamllint
-  - name: "flake8"
-    env: TOX_ENV=flake8
-  - name: "checkmigrations"
-    env: TOX_ENV=checkmigrations
-  - name: "test"
-    env: TOX_ENV=test
-  - stage: deploy
-    name: "deploy"
-    install: skip
-    script: skip
-    deploy:
-      provider: pypi
-      username: "__token__"
-      password: ${PYPI_TOKEN}
-      on:
-        tags: true
+    - name: Check YAML format
+      install:
+        - pip install tox
+      script:
+        - tox -e yamllint
+    - name: "flake8"
+      env: TOX_ENV=flake8
+    - name: "checkmigrations"
+      env: TOX_ENV=checkmigrations
+    - name: "test"
+      env: TOX_ENV=test
+    - stage: deploy
+      name: "deploy"
+      install: skip
+      script: skip
+      deploy:
+        provider: pypi
+        username: "__token__"
+        password: ${PYPI_TOKEN}
+        on:
+          tags: true
