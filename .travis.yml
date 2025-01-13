@@ -8,10 +8,6 @@ dist: jammy
 language: python
 python:
   - '3.10'
-install:
-  - pip install tox
-script:
-  - tox -e $TOX_ENV
 jobs:
   include:
     - name: Check YAML format
@@ -19,16 +15,23 @@ jobs:
         - pip install tox
       script:
         - tox -e yamllint
-    - name: "flake8"
-      env: TOX_ENV=flake8
-    - name: "checkmigrations"
-      env: TOX_ENV=checkmigrations
-    - name: "test"
-      env: TOX_ENV=test
+    - name: flake8
+      install:
+        - pip install tox
+      script:
+        - tox -e flake8
+    - name: checkmigrations
+      install:
+        - pip install tox
+      script:
+        - tox -e checkmigrations
+    - name: test
+      install:
+        - pip install tox
+      script:
+        - tox -e test
     - stage: deploy
-      name: "deploy"
-      install: skip
-      script: skip
+      name: deploy
       deploy:
         provider: pypi
         username: "__token__"
