@@ -13,6 +13,11 @@ script:
 - tox -e $TOX_ENV
 jobs:
   include:
+  - name: Check YAML format
+    install:
+      - pip install tox
+    script:
+      - tox -e yamllint
   - name: "flake8"
     env: TOX_ENV=flake8
   - name: "checkmigrations"
