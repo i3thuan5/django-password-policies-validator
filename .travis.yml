@@ -32,8 +32,8 @@ jobs:
         - tox -e test
     - stage: deploy
       name: deploy
+      if: branch =~ /^\d+\.\d+\.\d+$/ AND type == push
       deploy:
-        if: branch =~ /^\d+\.\d+\.\d+$/ AND type == push
         provider: pypi
         username: "__token__"
         password: ${PYPI_TOKEN}
