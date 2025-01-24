@@ -30,6 +30,11 @@ jobs:
         - pip install tox
       script:
         - tox -e test
+    - name: test with custom user model
+      install:
+        - pip install tox
+      script:
+        - tox -e test-custom-user-model
     - stage: deploy
       name: deploy
       if: branch =~ /^\d+\.\d+\.\d+$/ AND type == push
