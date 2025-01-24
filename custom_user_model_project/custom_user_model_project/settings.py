@@ -122,5 +122,8 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-INSTALLED_APPS += ['accounts']
+INSTALLED_APPS += [
+    'password_policies',
+    'accounts',
+]
 AUTH_USER_MODEL = "accounts.CustomUser"
