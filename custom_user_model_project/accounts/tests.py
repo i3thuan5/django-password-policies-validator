@@ -3,8 +3,8 @@ from accounts.models import CustomUser
 
 
 class ComplexityValidatorTest(TestCase):
-    def test_use_custom_model_foregin_keys(self):
+    def test_the_field_of_password_records_by_custom_model_foreign_keys(self):
         self.assertEqual(
-            len(CustomUser.objects.values('id', 'password_records_id')),
+            len(CustomUser.objects.values('id', 'password_records__date')),
             0
         )
