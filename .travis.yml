@@ -38,6 +38,8 @@ jobs:
     - stage: deploy
       name: deploy
       if: branch =~ /^\d+\.\d+\.\d+$/ AND type == push
+      install: skip # skip requirements.txt
+      script: skip # skip test scripts
       deploy:
         provider: pypi
         username: "__token__"
