@@ -9,7 +9,7 @@ description = "A Django app to validate password complexity and prevent users fr
 readme = "README.rst"
 requires-python = ">=3.8"
 keywords = ["django", "password", "validator"]
-license = { file="LICENSE" }
+license = "BSD-3-Clause"
 classifiers = [
     "Framework :: Django",
     "Programming Language :: Python :: 3",
