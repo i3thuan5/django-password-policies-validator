@@ -2,7 +2,7 @@
 branches:
   only:
     - main
-    - "/\\d+\\.\\d+\\.\\d+/"
+    - "/^\\d+\\.\\d+\\.\\d+$/"
 os: linux
 dist: jammy
 language: python
